@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Memo</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/tags.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Smart Memo</h1>
+            <div class="actions">
+                <button class="button" onclick="startChat()">
+                    <i data-lucide="message-circle"></i>
+                    Chat
+                </button>
+                <button class="button" onclick="addMemo()">
+                    <i data-lucide="plus"></i>
+                    Add Memo
+                </button>
+            </div>
+        </header>
+
+        <div class="tags-container" id="tagsContainer"></div>
+        <div class="cards" id="memoList"></div>
+    </div>
+
+    <!-- Modal for memo details -->
+    <div id="memoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Memo Details</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="memoDetails"></div>
+        </div>
+    </div>
+
+    <script src="js/mockData.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/memoService.js"></script>
+    <script src="js/components/TagManager.js"></script>
+    <script src="js/components/MemoRenderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

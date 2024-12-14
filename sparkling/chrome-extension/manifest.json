@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Sparkling - 剪存你的创意",
+  "version": "1.0.0",
+  "description": "Save and organize web content with custom notes",
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

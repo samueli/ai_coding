@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Content Bookmarker Settings</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Settings</h1>
+    
+    <div class="form-group">
+      <label for="apiEndpoint">API Endpoint</label>
+      <input type="url" id="apiEndpoint" value="https://api.playwithai.fun" placeholder="Enter API endpoint URL">
+    </div>
+    
+    <div class="form-group">
+      <label for="apiToken">API Token</label>
+      <input type="text" id="apiToken" value="d2ea42a0-cf9e-4a4d-9619-ae75b9cbb654" placeholder="Enter your API token">
+    </div>
+    
+    <div class="button-group">
+      <button id="saveSettings" class="primary-button">Save Settings</button>
+      <button id="viewBookmarks" class="secondary-button">View Saved Bookmarks</button>
+    </div>
+  </div>
+  
+  <div id="toast" class="toast"></div>
+  
+  <footer class="footer">
+    <p> © 2024@PlayWithAI. All rights reserved. <a href="https://playwithai.fun" target="_blank">Contact & Feedback</a></p>
+  </footer>
+  
+  <script type="module" src="js/options/index.js"></script>
+</body>
+</html>
