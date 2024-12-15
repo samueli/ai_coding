@@ -59,6 +59,21 @@ textarea {
   box-sizing: border-box;
 }
 
+input[readonly],
+textarea[readonly] {
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+  opacity: 0.8;
+  cursor: default;
+}
+
+input[readonly]:focus,
+textarea[readonly]:focus {
+  border-color: var(--border-color);
+  box-shadow: none;
+}
+
 input[type="text"]:focus,
 input[type="url"]:focus,
 textarea:focus {

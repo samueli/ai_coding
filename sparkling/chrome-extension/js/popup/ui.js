@@ -3,6 +3,7 @@ import { getLocalStorage } from '../utils/storage.js';
 export const initializeUI = async () => {
   const pageUrlInput = document.getElementById('pageUrl');
   const selectedContentInput = document.getElementById('selectedContent');
+  const notesInput = document.getElementById('notes');
 
   try {
     // First try to get data from local storage (for context menu selection)
@@ -28,6 +29,9 @@ export const initializeUI = async () => {
         pageUrlInput.value = tabs[0].url;
       }
     }
+
+    // Focus on the notes input field
+    notesInput.focus();
   } catch (error) {
     console.error('Error initializing UI:', error);
   }
