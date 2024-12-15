@@ -161,3 +161,26 @@ body {
 .card-action-button:hover {
     color: var(--primary);
 }
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.slogan {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-top: -0.25rem;
+}
