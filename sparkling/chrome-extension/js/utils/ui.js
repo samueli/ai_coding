@@ -1,8 +1,9 @@
 // UI utility functions
 export const showToast = (toastElement, message, duration = 3000) => {
   toastElement.textContent = message;
-  toastElement.style.display = 'block';
+  toastElement.classList.add('show');
+  
   setTimeout(() => {
-    toastElement.style.display = 'none';
+    toastElement.classList.remove('show');
   }, duration);
 };

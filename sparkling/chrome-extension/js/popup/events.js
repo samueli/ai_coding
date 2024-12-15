@@ -25,10 +25,10 @@ export const setupEventListeners = () => {
         notes: notesInput.value
       });
 
-      showToast(toast, 'Bookmark saved successfully!');
+      showToast(toast, 'Sparkling saved successfully!');
       setTimeout(() => window.close(), 2000);
     } catch (error) {
-      showToast(toast, 'Error saving bookmark');
+      showToast(toast, 'Error saving sparkling');
       console.error('Error:', error);
     }
   });

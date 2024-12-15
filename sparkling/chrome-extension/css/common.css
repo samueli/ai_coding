@@ -91,20 +91,27 @@ button:hover {
 
 .toast {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 12px 24px;
+  padding: 8px 16px;
   border-radius: 6px;
   background-color: var(--success-color);
   color: white;
   font-size: 14px;
   opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 1000;
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  height: 20px;
+  line-height: 20px;
 }
 
 .toast.show {
+  display: block;
   opacity: 1;
 }
 
