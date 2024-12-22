@@ -1,6 +1,5 @@
 import React from 'react';
-import logoImage from '../assets/icons/logo.svg';
 
 export const Logo = ({ className }) => (
-  <img src={logoImage} alt="Smart Memo Logo" className={className} />
+  <img src="https://i.ibb.co/52fjJNh/icon128.png" alt="Smart Memo Logo" className={className} />
 );

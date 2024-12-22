@@ -1,20 +1,5 @@
 name = "sparkling-portal"
 compatibility_date = "2024-12-22"
 
-[build]
-command = "npm run build"
-publish = "build"
-
-[build.environment]
-NODE_VERSION = "18"
-
-[site]
-bucket = "./build"
-entry-point = "."
-
-[[build.processing.rules]]
-type = "Image"
-globs = ["**/*.svg"]
-
 [env.production]
 main = "src/index.js"
