@@ -16,7 +16,7 @@ function Layout({ children }) {
   const { t } = useTranslation();
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
@@ -44,7 +44,9 @@ function Layout({ children }) {
           </div>
         </div>
       </header>
-      {children}
+      <main className="flex-1 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }
@@ -54,7 +56,7 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className="flex flex-col">
       <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
         <div className="flex max-w-[980px] flex-col items-start gap-2">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
@@ -70,7 +72,7 @@ function Home() {
         </div>
       </section>
 
-      <section id="features" className="py-20 bg-muted/20">
+      <section id="features" className="w-full py-20 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">{t('coreFeatures')}</h2>
@@ -204,7 +206,7 @@ function Home() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
