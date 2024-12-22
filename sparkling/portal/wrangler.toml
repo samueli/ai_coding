@@ -1,0 +1,5 @@
+name = "sparkling-portal"
+type = "javascript"
+
+[env.production]
+main = "src/index.js" # 这里指定你的入口文件
