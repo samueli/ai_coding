@@ -64,6 +64,12 @@ i18n
           reset: 'Reset',
           save: 'Save',
           saving: 'Saving...',
+          addTags: 'Add Tags',
+          editTags: 'Edit Tags',
+          enterTagsHint: 'Press Enter to add tag',
+          tagsLimit: 'Maximum 3 tags allowed',
+          cancel: 'Cancel',
+          summary: 'Summary',
           
           // Footer
           smartMemo: 'Smart Memo',
@@ -126,16 +132,22 @@ i18n
           generateRandomToken: '生成随机令牌',
           
           // Memos
-          memos: '灵感',
+          memos: '笔记',
           loading: '加载中...',
-          noMoreMemos: '没有更多灵感了',
-          shareMemo: '分享灵感',
-          deleteMemo: '删除灵感',
-          editMemo: '编辑灵感',
+          noMoreMemos: '没有更多笔记',
+          shareMemo: '分享笔记',
+          deleteMemo: '删除笔记',
+          editMemo: '编辑笔记',
           viewOriginal: '查看原文',
           reset: '重置',
           save: '保存',
           saving: '保存中...',
+          addTags: '添加标签',
+          editTags: '编辑标签',
+          enterTagsHint: '按回车添加标签',
+          tagsLimit: '最多可添加3个标签',
+          cancel: '取消',
+          summary: '摘要',
           
           // Footer
           smartMemo: 'Smart Memo',

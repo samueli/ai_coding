@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
@@ -18,41 +18,21 @@ import {
   Save, 
   MessageSquare,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Globe,
+  PenLine,
+  Plus,
+  Tag
 } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import MDEditor from '@uiw/react-md-editor';
-
-const MarkdownContent = ({ content }) => {
-  if (!content) return null;
-  
-  return (
-    <ReactMarkdown
-      className="prose prose-sm dark:prose-invert max-w-none"
-      components={{
-        // 自定义链接在新标签页打开
-        a: ({ node, ...props }) => (
-          <a target="_blank" rel="noopener noreferrer" {...props} className="text-primary hover:underline" />
-        ),
-        // 调整标题大小
-        h1: ({ node, ...props }) => <h1 {...props} className="text-lg font-bold mt-0" />,
-        h2: ({ node, ...props }) => <h2 {...props} className="text-base font-bold mt-0" />,
-        h3: ({ node, ...props }) => <h3 {...props} className="text-base font-semibold mt-0" />,
-        // 调整段落样式
-        p: ({ node, ...props }) => <p {...props} className="text-base leading-relaxed my-2" />,
-        // 调整列表样式
-        ul: ({ node, ...props }) => <ul {...props} className="list-disc list-inside my-2" />,
-        ol: ({ node, ...props }) => <ol {...props} className="list-decimal list-inside my-2" />,
-        // 调整代码块样式
-        code: ({ node, ...props }) => (
-          <code {...props} className="bg-muted px-1 py-0.5 rounded text-sm font-mono" />
-        ),
-      }}
-    >
-      {content}
-    </ReactMarkdown>
-  );
-};
+import { MarkdownContent } from '../components/markdown-content';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../components/ui/tooltip"
 
 export function Memos() {
   const { t } = useTranslation();
@@ -65,13 +45,23 @@ export function Memos() {
   const [editedContent, setEditedContent] = useState('');
   const [editedSummary, setEditedSummary] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [editingTags, setEditingTags] = useState(false);
+  const [selectedMemoForTags, setSelectedMemoForTags] = useState(null);
+  const [editedTags, setEditedTags] = useState([]);
+  const [isAiSummaryExpanded, setIsAiSummaryExpanded] = useState(false);
+  const loadingRef = useRef(false);
 
-  const fetchMemos = async () => {
+  const fetchMemos = useCallback(async () => {
     const token = localStorage.getItem('apiToken');
     if (!token) {
       navigate('/settings');
       return;
     }
+
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    setIsLoading(true);
 
     try {
       const response = await axios.get(`https://api.playwithai.fun/sparkling/query?token=${token}&page=${page}`);
@@ -92,12 +82,30 @@ export function Memos() {
       if (error.response?.status === 401) {
         navigate('/settings');
       }
+    } finally {
+      setIsLoading(false);
+      loadingRef.current = false;
     }
-  };
+  }, [navigate, page]);
 
   useEffect(() => {
-    fetchMemos();
-  }, []);
+    const token = localStorage.getItem('apiToken');
+    if (!token) {
+      navigate('/settings');
+      return;
+    }
+
+    // 只在组件首次挂载时加载数据
+    if (page === 1 && memos.length === 0 && !loadingRef.current) {
+      fetchMemos();
+    }
+  }, [fetchMemos, navigate, page, memos.length]);
+
+  const loadMore = useCallback(() => {
+    if (!isLoading && hasMore && !loadingRef.current) {
+      fetchMemos();
+    }
+  }, [fetchMemos, isLoading, hasMore]);
 
   const handleOpenMemo = (memo) => {
     setSelectedMemo(memo);
@@ -141,14 +149,19 @@ export function Memos() {
     }
   };
 
-  const handleShare = (memo) => {
-    // 实现分享功能
-    console.log('Share memo:', memo);
+  const handleShare = (e, memo) => {
+    e.stopPropagation();
+    // TODO: 实现分享功能
   };
 
-  const handleDelete = async (memoId) => {
+  const handleDelete = (e, memo) => {
+    e.stopPropagation();
+    handleDeleteMemo(memo.id);
+  };
+
+  const handleDeleteMemo = async (id) => {
     // 实现删除功能
-    console.log('Delete memo:', memoId);
+    console.log('Delete memo:', id);
   };
 
   const formatDate = (dateString) => {
@@ -159,33 +172,81 @@ export function Memos() {
     });
   };
 
-  const renderMemoContent = (memo) => {
-    if (memo.ai_summary) {
-      return (
-        <div className="space-y-4">
-          <div className="pt-8 px-6">
-            <div className="text-base font-medium text-foreground mb-2">
-              AI 总结
-            </div>
-            <div className="prose prose-sm dark:prose-invert max-w-none text-foreground line-clamp-3">
-              <MarkdownContent content={memo.ai_summary} />
-            </div>
-          </div>
-          <div className="border-t pt-4 px-6">
-            <div className="text-base font-medium text-foreground mb-2">
-              原文内容
-            </div>
-            <div className="prose prose-sm dark:prose-invert max-w-none text-foreground line-clamp-3">
-              <MarkdownContent content={memo.content} />
-            </div>
-          </div>
-        </div>
-      );
+  const handleSaveTags = async () => {
+    if (!selectedMemoForTags) return;
+    
+    setIsSaving(true);
+    try {
+      const token = localStorage.getItem('apiToken');
+      await axios.post(`https://api.playwithai.fun/sparkling/update`, {
+        token,
+        id: selectedMemoForTags.id,
+        ai_tags: JSON.stringify(editedTags)
+      });
+
+      // 更新本地数据
+      setMemos(prevMemos => prevMemos.map(memo => 
+        memo.id === selectedMemoForTags.id 
+          ? { ...memo, ai_tags: JSON.stringify(editedTags) }
+          : memo
+      ));
+
+      setEditingTags(false);
+      setSelectedMemoForTags(null);
+      setEditedTags([]);
+    } catch (error) {
+      console.error('Error saving tags:', error);
+    } finally {
+      setIsSaving(false);
     }
+  };
+
+  const handleAddTag = (tag) => {
+    if (editedTags.length < 3 && tag.trim()) {
+      setEditedTags(prev => [...prev, tag.trim()]);
+    }
+  };
+
+  const handleRemoveTag = (index) => {
+    setEditedTags(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleOpenTagsDialog = (memo, e) => {
+    e.stopPropagation();
+    setSelectedMemoForTags(memo);
+    setEditedTags(memo.ai_tags ? JSON.parse(memo.ai_tags) : []);
+    setEditingTags(true);
+  };
+
+  const renderMemoContent = (memo) => {
+    const tags = memo.ai_tags ? JSON.parse(memo.ai_tags).slice(0, 3) : [];
+    const content = memo.ai_summary || memo.content || memo.notes || '';
+    
     return (
-      <div className="pt-8 px-6">
-        <div className="prose prose-sm dark:prose-invert max-w-none text-foreground line-clamp-6">
-          <MarkdownContent content={memo.content || memo.notes} />
+      <div className="flex flex-col h-full">
+        <div className="px-6 pt-6 pb-2 min-h-[48px] flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <span 
+              key={index}
+              className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20"
+            >
+              {tag}
+            </span>
+          ))}
+          {tags.length < 3 && (
+            <button
+              onClick={(e) => handleOpenTagsDialog(memo, e)}
+              className="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted hover:bg-muted/80 transition-colors"
+            >
+              <Plus className="w-3 h-3 mr-1" />
+              {t('addTags')}
+            </button>
+          )}
+        </div>
+        <div className="px-6 flex-1 overflow-hidden">
+          <div className="prose prose-sm dark:prose-invert max-w-none text-foreground line-clamp-6">
+            <MarkdownContent content={content} />
+          </div>
         </div>
       </div>
     );
@@ -205,8 +266,8 @@ export function Memos() {
 
       <InfiniteScroll
         dataLength={memos.length}
-        next={fetchMemos}
-        hasMore={hasMore}
+        next={loadMore}
+        hasMore={hasMore && !isLoading}
         loader={
           <div className="text-center py-8 text-base flex items-center justify-center gap-2">
             <RotateCcw className="w-4 h-4 animate-spin" />
@@ -228,36 +289,53 @@ export function Memos() {
                 className="relative group h-[300px] flex flex-col cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-primary/20"
                 onClick={() => handleOpenMemo(memo)}
               >
-                <div className="absolute top-3 right-3 space-x-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShare(memo);
-                    }}
-                    className="h-8 w-8 bg-background/95 hover:bg-background shadow-sm"
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(memo.id);
-                    }}
-                    className="h-8 w-8 text-destructive bg-background/95 hover:bg-background shadow-sm"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 bg-background/95 hover:bg-background shadow-sm"
+                          onClick={(e) => handleShare(e, memo)}
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>{t('shareMemo')}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:text-destructive bg-background/95 hover:bg-background shadow-sm"
+                          onClick={(e) => handleDelete(e, memo)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>{t('deleteMemo')}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <div className="flex-1 overflow-hidden">
                   {renderMemoContent(memo)}
                 </div>
                 <div className="px-6 py-4 mt-auto border-t bg-background/95 backdrop-blur-sm flex items-center justify-between rounded-b-lg">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
+                    {memo.url ? (
+                      <Globe className="w-3.5 h-3.5" />
+                    ) : (
+                      <PenLine className="w-3.5 h-3.5" />
+                    )}
                     {formatDate(memo.create_time)}
                   </div>
                   {memo.url && (
@@ -293,24 +371,38 @@ export function Memos() {
                   </div>
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     <div data-color-mode={theme === 'dark' ? 'dark' : 'light'}>
-                      <MDEditor
-                        value={editedContent}
-                        onChange={setEditedContent}
-                        preview="edit"
-                        height={400}
-                      />
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          {t('editMemo')}
+                        </label>
+                        <MDEditor
+                          value={editedContent}
+                          onChange={setEditedContent}
+                          preview="edit"
+                          height={200}
+                          className="border rounded-md"
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium flex items-center gap-2">
-                        <Sparkles className="w-4 h-4" />
-                        AI 摘要
-                      </label>
-                      <textarea
-                        value={editedSummary}
-                        onChange={(e) => setEditedSummary(e.target.value)}
-                        className="w-full h-24 px-3 py-2 text-sm rounded-md border bg-background resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
+                    {selectedMemo?.ai_summary && (
+                      <div className="space-y-2 mt-8">
+                        <label className="text-sm font-medium flex items-center gap-2">
+                          <Sparkles className="w-4 h-4" />
+                          AI {t('summary')}
+                        </label>
+                        <div 
+                          className={`relative cursor-pointer transition-all duration-300 ${isAiSummaryExpanded ? 'h-auto' : 'h-[200px]'}`}
+                          onClick={() => setIsAiSummaryExpanded(!isAiSummaryExpanded)}
+                        >
+                          <div className={`w-full p-3 bg-muted/50 rounded-md text-sm text-muted-foreground overflow-y-auto ${isAiSummaryExpanded ? 'max-h-[400px]' : 'h-full overflow-hidden'}`}>
+                            <MarkdownContent content={selectedMemo.ai_summary} />
+                          </div>
+                          {!isAiSummaryExpanded && (
+                            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="p-4 border-t bg-background/95 backdrop-blur-sm flex items-center justify-end space-x-4">
                     <Button
@@ -337,6 +429,85 @@ export function Memos() {
           </Dialog.Root>
         ))}
       </InfiniteScroll>
+
+      <Dialog.Root open={editingTags} onOpenChange={(open) => !open && setEditingTags(false)}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
+          <Dialog.Content className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[400px] z-50 bg-background rounded-lg border shadow-lg outline-none">
+            <div className="flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <Tag className="w-5 h-5" />
+                  {t('editTags')}
+                </h2>
+                <Dialog.Close asChild>
+                  <Button variant="ghost" size="icon">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </Dialog.Close>
+              </div>
+              <div className="p-4 space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {editedTags.map((tag, index) => (
+                    <span 
+                      key={index}
+                      className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20 group"
+                    >
+                      {tag}
+                      <button
+                        onClick={() => handleRemoveTag(index)}
+                        className="ml-1 text-primary/60 hover:text-primary"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                {editedTags.length < 3 && (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder={t('enterTagsHint')}
+                      className="flex-1 px-3 py-2 text-sm rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddTag(e.target.value);
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="text-xs text-muted-foreground">
+                  {t('tagsLimit')}
+                </div>
+              </div>
+              <div className="p-4 border-t bg-background/95 backdrop-blur-sm flex items-center justify-end space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setEditingTags(false);
+                    setSelectedMemoForTags(null);
+                    setEditedTags([]);
+                  }}
+                  disabled={isSaving}
+                >
+                  {t('cancel')}
+                </Button>
+                <Button
+                  onClick={handleSaveTags}
+                  disabled={isSaving}
+                  className="flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  {isSaving ? t('saving') : t('save')}
+                </Button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
-}
+};
