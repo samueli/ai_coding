@@ -43,12 +43,27 @@ i18n
           settingsSaved: 'Settings saved successfully!',
           pleaseEnterToken: 'Please enter your API token',
           errorSavingToken: 'Error saving token. Please try again.',
+          tokenInstructions: 'Token Instructions:',
+          tokenInstructionOnce: 'Set once for permanent use',
+          tokenInstructionStorage: 'Securely stored in browser',
+          tokenInstructionSafety: 'Keep token private and secure',
+          tokenInstructionClear: 'Reset needed if browser data cleared',
+          tokenInstructionGenerate: 'Click to generate random token',
+          tokenInstructionChromePlugin: 'Use with Chrome extension:',
+          chromePluginInstall: 'Install Extension',
+          generateRandomToken: 'Generate Random Token',
           
           // Memos
+          memos: 'Memos',
           loading: 'Loading...',
-          noMoreMemos: 'No more memos',
+          noMoreMemos: 'No more Memos',
           shareMemo: 'Share Memo',
           deleteMemo: 'Delete Memo',
+          editMemo: 'Edit Memo',
+          viewOriginal: 'View Original',
+          reset: 'Reset',
+          save: 'Save',
+          saving: 'Saving...',
           
           // Footer
           smartMemo: 'Smart Memo',
@@ -100,6 +115,15 @@ i18n
           settingsSaved: '设置保存成功！',
           pleaseEnterToken: '请输入 API 令牌',
           errorSavingToken: '保存令牌时出错，请重试。',
+          tokenInstructions: '令牌说明',
+          tokenInstructionOnce: '设置一次永久有效',
+          tokenInstructionStorage: '安全存储在浏览器中',
+          tokenInstructionSafety: '请勿泄露给他人',
+          tokenInstructionClear: '清除浏览器数据需重置',
+          tokenInstructionGenerate: '点击生成随机令牌',
+          tokenInstructionChromePlugin: '配置到 Chrome 插件：',
+          chromePluginInstall: '安装插件',
+          generateRandomToken: '生成随机令牌',
           
           // Memos
           memos: '灵感',
@@ -108,6 +132,10 @@ i18n
           shareMemo: '分享灵感',
           deleteMemo: '删除灵感',
           editMemo: '编辑灵感',
+          viewOriginal: '查看原文',
+          reset: '重置',
+          save: '保存',
+          saving: '保存中...',
           
           // Footer
           smartMemo: 'Smart Memo',

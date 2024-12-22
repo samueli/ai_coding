@@ -7,7 +7,19 @@ import ReactMarkdown from 'react-markdown';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { Share2, Trash2, X } from 'lucide-react';
+import { 
+  Share2, 
+  Trash2, 
+  X, 
+  BookOpen, 
+  FileText, 
+  Link as LinkIcon, 
+  RotateCcw, 
+  Save, 
+  MessageSquare,
+  Sparkles,
+  ExternalLink
+} from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import MDEditor from '@uiw/react-md-editor';
 
@@ -181,12 +193,32 @@ export function Memos() {
 
   return (
     <div className="container mx-auto py-8">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <MessageSquare className="w-6 h-6" />
+          {t('memos')}
+        </h1>
+        <div className="text-sm text-muted-foreground">
+          {memos.length} {t('memos')}
+        </div>
+      </div>
+
       <InfiniteScroll
         dataLength={memos.length}
         next={fetchMemos}
         hasMore={hasMore}
-        loader={<div className="text-center py-4 text-base">{t('loading')}</div>}
-        endMessage={<div className="text-center py-4 text-base">{t('noMoreMemos')}</div>}
+        loader={
+          <div className="text-center py-8 text-base flex items-center justify-center gap-2">
+            <RotateCcw className="w-4 h-4 animate-spin" />
+            {t('loading')}
+          </div>
+        }
+        endMessage={
+          <div className="text-center py-8 text-base text-muted-foreground flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            {t('noMoreMemos')}
+          </div>
+        }
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
         {memos.map((memo) => (
@@ -224,18 +256,20 @@ export function Memos() {
                   {renderMemoContent(memo)}
                 </div>
                 <div className="px-6 py-4 mt-auto border-t bg-background/95 backdrop-blur-sm flex items-center justify-between rounded-b-lg">
-                  <p className="text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="w-4 h-4" />
                     {formatDate(memo.create_time)}
-                  </p>
+                  </div>
                   {memo.url && (
                     <a
                       href={memo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-primary hover:underline"
+                      className="flex items-center gap-1 text-sm text-primary hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      查看原文
+                      <ExternalLink className="w-4 h-4" />
+                      {t('viewOriginal')}
                     </a>
                   )}
                 </div>
@@ -247,7 +281,10 @@ export function Memos() {
               <Dialog.Content className="fixed right-0 top-0 h-full w-[600px] z-50 bg-background border-l shadow-lg outline-none">
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between p-4 border-b">
-                    <h2 className="text-lg font-semibold">{t('editMemo')}</h2>
+                    <h2 className="text-lg font-semibold flex items-center gap-2">
+                      <BookOpen className="w-5 h-5" />
+                      {t('editMemo')}
+                    </h2>
                     <Dialog.Close asChild>
                       <Button variant="ghost" size="icon">
                         <X className="h-4 w-4" />
@@ -264,7 +301,10 @@ export function Memos() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">AI 摘要</label>
+                      <label className="text-sm font-medium flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" />
+                        AI 摘要
+                      </label>
                       <textarea
                         value={editedSummary}
                         onChange={(e) => setEditedSummary(e.target.value)}
@@ -277,14 +317,18 @@ export function Memos() {
                       variant="outline"
                       onClick={handleReset}
                       disabled={isSaving}
+                      className="flex items-center gap-2"
                     >
-                      重置
+                      <RotateCcw className="w-4 h-4" />
+                      {t('reset')}
                     </Button>
                     <Button
                       onClick={handleSave}
                       disabled={isSaving}
+                      className="flex items-center gap-2"
                     >
-                      {isSaving ? '保存中...' : '保存'}
+                      <Save className="w-4 h-4" />
+                      {isSaving ? t('saving') : t('save')}
                     </Button>
                   </div>
                 </div>
