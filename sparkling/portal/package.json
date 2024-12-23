@@ -10,6 +10,7 @@
     "autoprefixer": "^10.4.16",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
+    "classnames": "^2.5.1",
     "clsx": "^2.0.0",
     "i18next": "^24.2.0",
     "i18next-browser-languagedetector": "^8.0.2",

@@ -219,7 +219,20 @@ export function Memos() {
   };
 
   const renderMemoContent = (memo) => {
-    const tags = memo.ai_tags ? JSON.parse(memo.ai_tags).slice(0, 3) : [];
+    let tags = [];
+    try {
+      tags = memo.ai_tags ? JSON.parse(memo.ai_tags) : [];
+      console.log('Parsed tags:', tags);
+      if (!Array.isArray(tags)) {
+        tags = [];
+      }
+    } catch (error) {
+      console.error('Error parsing tags:', error);
+      tags = [];
+    }
+    
+    console.log('Should show Add Tags button:', !tags || tags.length < 3);
+    
     const content = memo.ai_summary || memo.content || memo.notes || '';
     
     return (
@@ -233,10 +246,10 @@ export function Memos() {
               {tag}
             </span>
           ))}
-          {tags.length < 3 && (
+          {(!tags || tags.length < 3) && (
             <button
               onClick={(e) => handleOpenTagsDialog(memo, e)}
-              className="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted hover:bg-muted/80 transition-colors"
+              className="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-muted/80 transition-colors"
             >
               <Plus className="w-3 h-3 mr-1" />
               {t('addTags')}

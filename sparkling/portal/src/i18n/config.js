@@ -23,17 +23,14 @@ i18n
           slogan: 'sparkling your ideas',
           coreFeatures: 'Core Features',
           featureDescription: 'Smart tools to capture, organize, and enhance your ideas',
-          
+          changelog: 'Changelog',
           // Features
           crossPlatform: 'Cross-Platform Sync',
           crossPlatformDesc: 'Capture and sync your inspirations across all devices seamlessly',
-          
           unifiedManagement: 'Unified Management',
           unifiedManagementDesc: 'Organize and manage all your ideas in one central place',
-          
           aiEnhanced: 'AI Enhancement',
           aiEnhancedDesc: 'Leverage AI for summarization, tagging, and smart search',
-          
           // Settings
           settings: 'Settings',
           apiToken: 'API Token',
@@ -52,7 +49,20 @@ i18n
           tokenInstructionChromePlugin: 'Use with Chrome extension:',
           chromePluginInstall: 'Install Extension',
           generateRandomToken: 'Generate Random Token',
-          
+          // Changelog
+          'changelog.v0.2.0.0': 'Added tag management',
+          'changelog.v0.2.0.1': 'Optimized AI summary display',
+          'changelog.v0.2.0.2': 'Improved note editing interface',
+          'changelog.v0.2.0.3': 'Added multi-language support',
+          'changelog.v0.2.0.4': 'Optimized mobile adaptation',
+          'changelog.v0.1.1.0': 'Fixed duplicate loading issue',
+          'changelog.v0.1.1.1': 'Optimized loading performance',
+          'changelog.v0.1.1.2': 'Improved UI interaction',
+          'changelog.v0.1.1.3': 'Markdown editing support',
+          'changelog.v0.1.0.0': 'Initial release',
+          'changelog.v0.1.0.1': 'Basic note functionality',
+          'changelog.v0.1.0.2': 'AI summary generation',
+          'changelog.v0.1.0.3': 'Added Chrome extension',
           // Memos
           memos: 'Memos',
           loading: 'Loading...',
@@ -70,7 +80,6 @@ i18n
           tagsLimit: 'Maximum 3 tags allowed',
           cancel: 'Cancel',
           summary: 'Summary',
-          
           // Footer
           smartMemo: 'Smart Memo',
           buildingFutureOfIdeas: 'Empowering creativity with smart note-taking',
@@ -101,17 +110,14 @@ i18n
           slogan: '激发你的创意灵感',
           coreFeatures: '核心功能',
           featureDescription: '智能工具，助你捕捉、整理和提升创意',
-          
+          changelog: '版本记录',
           // Features
           crossPlatform: '多端同步',
           crossPlatformDesc: '支持浏览器插件、网页应用和移动端，随时随地记录灵感。支持一键导入网页内容，自动同步所有设备，离线可用，确保你永不错过任何灵感时刻',
-          
           unifiedManagement: '统一管理',
           unifiedManagementDesc: '强大的编辑器支持 Markdown 格式，支持标签分类、全文检索。支持编辑、补充、合并灵感，让创意井然有序。支持导出多种格式，方便分享和备份',
-          
           aiEnhanced: 'AI 增强',
           aiEnhancedDesc: '智能 AI 助手自动生成摘要和标签，提供相关内容推荐。支持智能搜索和内容聚合，帮你发现灵感之间的联系。支持多语言翻译和智能改写，让灵感更有价值',
-          
           // 设置
           settings: '设置',
           apiToken: 'API 令牌',
@@ -130,7 +136,20 @@ i18n
           tokenInstructionChromePlugin: '配置到 Chrome 插件：',
           chromePluginInstall: '安装插件',
           generateRandomToken: '生成随机令牌',
-          
+          // Changelog
+          'changelog.v0.2.0.0': '添加标签管理功能',
+          'changelog.v0.2.0.1': '优化 AI 摘要显示',
+          'changelog.v0.2.0.2': '改进笔记编辑界面',
+          'changelog.v0.2.0.3': '添加多语言支持',
+          'changelog.v0.2.0.4': '优化移动端适配',
+          'changelog.v0.1.1.0': '修复重复加载问题',
+          'changelog.v0.1.1.1': '优化加载性能',
+          'changelog.v0.1.1.2': '改进 UI 交互',
+          'changelog.v0.1.1.3': '支持 Markdown 编辑',
+          'changelog.v0.1.0.0': '首次发布',
+          'changelog.v0.1.0.1': '基础笔记功能',
+          'changelog.v0.1.0.2': 'AI 摘要生成',
+          'changelog.v0.1.0.3': '新增 Chrome 插件',
           // Memos
           memos: '笔记',
           loading: '加载中...',
@@ -148,7 +167,6 @@ i18n
           tagsLimit: '最多可添加3个标签',
           cancel: '取消',
           summary: '摘要',
-          
           // Footer
           smartMemo: 'Smart Memo',
           buildingFutureOfIdeas: '用智能笔记激发创造力',
